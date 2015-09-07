@@ -1,0 +1,6 @@
+include 'sc-config-server'
+include 'sc-eureka-server'
+include 'sc-yarn-appmaster'
+include 'sc-yarn-admin'
+include 'sc-yarn-store'
+include 'sc-yarn-client'

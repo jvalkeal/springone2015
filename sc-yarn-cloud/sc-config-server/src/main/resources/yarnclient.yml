@@ -1,0 +1,20 @@
+spring:
+    main:
+        show_banner: false
+    hadoop:
+        fsUri: hdfs://localhost:8020
+        resourceManagerHost: localhost
+    yarn:
+        appType: BOOT
+        appName: sc-yarn-cloud
+        applicationBaseDir: /app/
+        client:
+            clientClass: org.springframework.yarn.client.DefaultApplicationYarnClient
+            files:
+              - "file:sc-yarn-dist/sc-yarn-appmaster-1.0.0.BUILD-SNAPSHOT.jar"
+              - "file:sc-yarn-dist/sc-yarn-admin-1.0.0.BUILD-SNAPSHOT.jar"
+              - "file:sc-yarn-dist/sc-yarn-store-1.0.0.BUILD-SNAPSHOT.jar"
+            launchcontext:
+                archiveFile: sc-yarn-appmaster-1.0.0.BUILD-SNAPSHOT.jar
+            resource:
+                memory: 1g

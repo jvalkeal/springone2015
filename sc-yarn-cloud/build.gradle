@@ -1,0 +1,115 @@
+buildscript {
+	repositories {
+		maven { url "http://repo.spring.io/plugins-release" }
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+		classpath("io.spring.gradle:dependency-management-plugin:$ioVersion")
+	}
+}
+
+configure(rootProject) {
+	task clean {
+		doLast {
+			ant.delete(dir: "sc-yarn-dist")
+			ant.delete(dir: "target")
+		}
+	}
+}
+
+subprojects { subproject ->
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+	apply plugin: 'idea'
+	apply plugin: 'spring-boot'
+	apply plugin: 'io.spring.dependency-management'
+
+	configurations {
+		all*.exclude group: "org.slf4j", module: "slf4j-log4j12"
+	}
+
+	repositories {
+		mavenCentral()
+		maven { url "http://repo.spring.io/libs-milestone" }
+		maven { url "http://repo.spring.io/libs-release" }
+		maven { url "http://repo.spring.io/libs-snapshot" }
+	}
+
+	dependencyManagement {
+		imports {
+			mavenBom "org.springframework.cloud:spring-cloud-starter-parent:$springCloudVersion"
+		}
+	}
+
+	task copyJars(type: Copy) {
+		from "$buildDir/libs"
+		into "$rootDir/sc-yarn-dist/"
+		include "**/*.jar"
+	}
+
+	build.doLast {
+		copyJars.execute()
+	}
+}
+
+project('sc-eureka-server') {
+	springBoot {
+		requiresUnpack = ['com.netflix.eureka:eureka-core','com.netflix.eureka:eureka-client']
+	}
+	dependencies {
+		compile "org.springframework.cloud:spring-cloud-starter-eureka-server"
+		compile "org.springframework.cloud:spring-cloud-starter-config"
+	}
+}
+
+project('sc-config-server') {
+	dependencies {
+		compile "org.springframework.cloud:spring-cloud-config-server"
+		compile "org.springframework.boot:spring-boot-starter-web"
+	}
+}
+
+project('sc-yarn-appmaster') {
+	dependencies {
+		compile "org.springframework.boot:spring-boot-starter"
+		compile "org.springframework.boot:spring-boot-starter-web"
+		compile "org.springframework.cloud:spring-cloud-config-client"
+		compile "org.springframework.cloud:spring-cloud-starter-hystrix-dashboard"
+		compile "org.springframework.data:spring-yarn-boot:$springHadoopVersion"
+	}
+}
+
+project('sc-yarn-admin') {
+	dependencies {
+		compile "org.springframework.boot:spring-boot-starter"
+		compile "org.springframework.cloud:spring-cloud-config-client"
+		compile "org.springframework.cloud:spring-cloud-starter-hystrix"
+		compile "org.springframework.cloud:spring-cloud-starter-eureka"
+		compile "org.springframework.cloud:spring-cloud-cluster-zookeeper:$springCloudClusterVersion"
+		compile "org.springframework.cloud:spring-cloud-cluster-autoconfigure:$springCloudClusterVersion"
+		compile "org.springframework.boot:spring-boot-starter-web"
+		compile "org.springframework.data:spring-yarn-boot:$springHadoopVersion"
+	}
+}
+
+project('sc-yarn-store') {
+	dependencies {
+		compile "org.springframework.boot:spring-boot-starter"
+		compile "org.springframework.boot:spring-boot-starter-web"
+		compile "org.springframework.cloud:spring-cloud-config-client"
+		compile "org.springframework.cloud:spring-cloud-starter-eureka"
+		compile "org.springframework.data:spring-yarn-boot:$springHadoopVersion"
+		compile "org.springframework.data:spring-data-hadoop-store:$springHadoopVersion"
+	}
+}
+
+project('sc-yarn-client') {
+	dependencies {
+		compile "org.springframework.data:spring-yarn-boot-cli:$springHadoopVersion"
+		compile "org.springframework.cloud:spring-cloud-config-client"
+	}
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '2.2.1'
+}

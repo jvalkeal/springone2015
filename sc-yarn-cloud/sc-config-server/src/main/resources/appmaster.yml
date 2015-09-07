@@ -1,0 +1,48 @@
+server:
+    port: 0
+spring:
+    hadoop:
+        fsUri: hdfs://localhost:8020
+        resourceManagerHost: localhost
+    yarn:
+        appType: BOOT
+        applicationBaseDir: /app/
+        appmaster:
+            appmasterClass: org.springframework.yarn.am.cluster.ManagedContainerClusterAppmaster
+            keepContextAlive: true
+            containercluster:
+                enabled: true
+                clusters:
+                    admin:
+                        projection:
+                            type: default
+                            data:
+                                any: 2
+                        resource:
+                            priority: 1
+                            memory: 64
+                            virtualCores: 1
+                        launchcontext:
+                            locality: false
+                            archiveFile: sc-yarn-admin-1.0.0.BUILD-SNAPSHOT.jar
+                        localizer:
+                            patterns:
+                                - "sc-yarn-admin-1.0.0.BUILD-SNAPSHOT.jar"
+                    store:
+                        projection:
+                            type: default
+                            data:
+                                any: 2
+                        resource:
+                            priority: 2
+                            memory: 64
+                            virtualCores: 1
+                        launchcontext:
+                            locality: false
+                            archiveFile: sc-yarn-store-1.0.0.BUILD-SNAPSHOT.jar
+                        localizer:
+                            patterns:
+                                - "sc-yarn-store-1.0.0.BUILD-SNAPSHOT.jar"
+        endpoints:
+            containercluster:
+                enabled: true

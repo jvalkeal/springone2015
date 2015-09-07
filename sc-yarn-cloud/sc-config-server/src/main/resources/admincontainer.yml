@@ -1,0 +1,13 @@
+server:
+  port: 0
+spring:
+  hadoop:
+    fsUri: hdfs://localhost:8020
+  cloud:
+    cluster:
+      zookeeper:
+        connect: localhost:2181
+eureka:
+  instance:
+    metadataMap:
+      instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
