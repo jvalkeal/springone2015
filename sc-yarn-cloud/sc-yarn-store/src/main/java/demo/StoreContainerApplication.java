@@ -68,7 +68,7 @@ public class StoreContainerApplication {
 				throws Exception {
 			config
 				.basePath("/tmp/store")
-				.idleTimeout(60000)
+				.idleTimeout(10000)
 				.inWritingSuffix(".tmp")
 				.withPartitionStrategy()
 					.map("dateFormat('yyyy/MM/dd/HH/mm', timestamp)")

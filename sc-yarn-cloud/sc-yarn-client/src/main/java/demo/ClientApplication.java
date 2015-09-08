@@ -15,6 +15,7 @@ import org.springframework.yarn.boot.cli.YarnClustersInfoCommand;
 import org.springframework.yarn.boot.cli.YarnKillCommand;
 import org.springframework.yarn.boot.cli.YarnPushCommand;
 import org.springframework.yarn.boot.cli.YarnPushedCommand;
+import org.springframework.yarn.boot.cli.YarnShutdownCommand;
 import org.springframework.yarn.boot.cli.YarnSubmitCommand;
 import org.springframework.yarn.boot.cli.YarnSubmittedCommand;
 import org.springframework.yarn.boot.cli.shell.ShellCommand;
@@ -28,6 +29,7 @@ public class ClientApplication extends AbstractCli {
 		commands.add(new YarnSubmitCommand());
 		commands.add(new YarnSubmittedCommand());
 		commands.add(new YarnKillCommand());
+		commands.add(new YarnShutdownCommand());
 		commands.add(new YarnClustersInfoCommand());
 		commands.add(new YarnClusterInfoCommand());
 		commands.add(new YarnClusterCreateCommand());
